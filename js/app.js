@@ -9,6 +9,7 @@ this.horns = horns.horns;
 }
 
 Horns.allHorns = [];
+Horns.allOpt = [];
 
 Horns.prototype.render = function () {
     $('main').append('<div class="clone"></div>');
@@ -38,3 +39,24 @@ Horns.loadHorns = () => {
 console.log(Horns.allHorns)
 
 $(() => Horns.readJson());
+
+Horns.prototype.renderOpt = function () {
+    $('#opt-template').append('<option class="clone"></option>');
+    let optClone = $('option[class="clone"]');
+    let optHTML = $('#opt-template').html();
+    optClone.html(optHTML);
+    $('option').text(Horns.allHorns.keyword);
+    optClone.removeClass('clone');
+    optClone.attr('class', Horns.allHorns.keyword);
+    
+}
+Horns.prototype.renderOpt();
+Horns.loadOpt = () => {
+    Horns.allOpt.forEach(keyword => Horns.allHorns.keyword.renderOpt())
+}
+Horns.loadOpt();
+console.log(Horns.allOpt);
+
+Horns.filterOpt = () => {
+
+}
