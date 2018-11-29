@@ -1,17 +1,17 @@
-'use strict'
+'use strict';
 
-function Horns(horns){
-this.title = horns.title;
-this.image_url = horns.image_url;
-this.description = horns.description;
-this.keyword = horns.keyword;
-this.horns = horns.horns;
+function Horns(horns) {
+    this.title = horns.title;
+    this.image_url = horns.image_url;
+    this.description = horns.description;
+    this.keyword = horns.keyword;
+    this.horns = horns.horns;
 }
 
 Horns.allHorns = [];
 Horns.allOpt = [];
 
-Horns.prototype.render = function () {
+Horns.prototype.render = function() {
     $('main').append('<div class="clone"></div>');
     let hornClone = $('div[class="clone"]');
     let hornHTML = $('#photo-template').html();
@@ -23,40 +23,47 @@ Horns.prototype.render = function () {
     hornClone.attr('class', this.title);
 }
 
-Horns.readJson = () => {
+function readJson() {
     $.get('../data/page-1.json', 'json')
-    .then(data => {
-        data.forEach(obj => {
-            Horns.allHorns.push(new Horns(obj))
+        .then(data => {
+            data.forEach(obj => {
+                Horns.allHorns.push(new Horns(obj));
+            })
+
+            console.log('my data from page 1', data);
         })
-    })
-    .then(Horns.loadHorns)
+        .then(() => {
+            for(let i = 0; i < Horns.allHorns.length; i++){
+                Horns.allHorns[i].render(); 
+                Horns.allOpt.push(Horns.allHorns[i].keyword)
+            }
+            console.log(Horns.allOpt);
+            loadHorns();
+        });
 }
 
-Horns.loadHorns = () => {
-    Horns.allHorns.forEach(horns => horns.render())
-}
-console.log(Horns.allHorns)
-
-$(() => Horns.readJson());
-
-Horns.prototype.renderOpt = function () {
-    $('#opt-template').append('<option class="clone"></option>');
-    let optClone = $('option[class="clone"]');
-    let optHTML = $('#opt-template').html();
-    optClone.html(optHTML);
-    $('option').text(Horns.allHorns.keyword);
-    optClone.removeClass('clone');
-    optClone.attr('class', Horns.allHorns.keyword);
+function loadHorns() {
+    for(let i = 0; i < Horns.allHorns.length; i++){
+        Horns.allHorns[i].render(); 
+    }
     
+};
+
+console.log(Horns.allHorns);
+
+
+function fillOptArr() {
+    for (let i = 0; i < Horns.allHorns.length; i++) {
+        Horns.allOpt.push(Horns.allHorns[i].keyword);
+    }
+    return Horns.allOpt;
 }
-Horns.prototype.renderOpt();
-Horns.loadOpt = () => {
-    Horns.allOpt.forEach(keyword => Horns.allHorns.keyword.renderOpt())
-}
-Horns.loadOpt();
+
+
+// function checkKeyword() { }
+
+readJson();
+fillOptArr();
+
 console.log(Horns.allOpt);
 
-Horns.filterOpt = () => {
-
-}
