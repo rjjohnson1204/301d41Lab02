@@ -1,11 +1,11 @@
 'use strict'
 
-function Horns(horns){
-this.title = horns.title;
-this.image_url = horns.image_url;
-this.description = horns.description;
-this.keyword = horns.keyword;
-this.horns = horns.horns;
+function Horns(horns) {
+    this.title = horns.title;
+    this.image_url = horns.image_url;
+    this.description = horns.description;
+    this.keyword = horns.keyword;
+    this.horns = horns.horns;
 }
 
 Horns.allHorns = [];
@@ -25,12 +25,12 @@ Horns.prototype.render = function () {
 
 Horns.readJson = () => {
     $.get('../data/page-1.json', 'json')
-    .then(data => {
-        data.forEach(obj => {
-            Horns.allHorns.push(new Horns(obj))
+        .then(data => {
+            data.forEach(obj => {
+                Horns.allHorns.push(new Horns(obj))
+            })
         })
-    })
-    .then(Horns.loadHorns)
+        .then(Horns.loadHorns)
 }
 
 Horns.loadHorns = () => {
@@ -40,23 +40,29 @@ console.log(Horns.allHorns)
 
 $(() => Horns.readJson());
 
-Horns.prototype.renderOpt = function () {
-    $('#opt-template').append('<option class="clone"></option>');
-    let optClone = $('option[class="clone"]');
-    let optHTML = $('#opt-template').html();
-    optClone.html(optHTML);
-    $('option').text(Horns.allHorns.keyword);
-    optClone.removeClass('clone');
-    optClone.attr('class', Horns.allHorns.keyword);
-    
+Horns.fillOptArr = function () {
+    for (let i = 0; i < Horns.allHorns.length; i++) {
+        Horns.allOpt.push(Horns.allHorns[i].keyword);
+    }
+    return Horns.allOpt;
 }
-Horns.prototype.renderOpt();
-Horns.loadOpt = () => {
-    Horns.allOpt.forEach(keyword => Horns.allHorns.keyword.renderOpt())
+Horns.fillOptArr();
+
+function checkKeyword(){    }
+
+
+function loadOpt (){
+    Horns.allOpt.forEach(horns => {
+        console.log(horns);
+        // $('#opt-template').append('<option class="clone"></option>');
+        // let optClone = $('option[class="clone"]');
+        // $('option').text(horns);
+        // optClone.attr('class', horns);
+        // optClone.removeClass('clone');
+    });
 }
-Horns.loadOpt();
+
+
 console.log(Horns.allOpt);
+loadOpt();
 
-Horns.filterOpt = () => {
-
-}
