@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function Horns(horns) {
     this.title = horns.title;
@@ -11,7 +11,7 @@ function Horns(horns) {
 Horns.allHorns = [];
 Horns.allOpt = [];
 
-Horns.prototype.render = function () {
+Horns.prototype.render = function() {
     $('main').append('<div class="clone"></div>');
     let hornClone = $('div[class="clone"]');
     let hornHTML = $('#photo-template').html();
@@ -23,46 +23,47 @@ Horns.prototype.render = function () {
     hornClone.attr('class', this.title);
 }
 
-Horns.readJson = () => {
+function readJson() {
     $.get('../data/page-1.json', 'json')
         .then(data => {
             data.forEach(obj => {
-                Horns.allHorns.push(new Horns(obj))
+                Horns.allHorns.push(new Horns(obj));
             })
+
+            console.log('my data from page 1', data);
         })
-        .then(Horns.loadHorns)
+        .then(() => {
+            for(let i = 0; i < Horns.allHorns.length; i++){
+                Horns.allHorns[i].render(); 
+                Horns.allOpt.push(Horns.allHorns[i].keyword)
+            }
+            console.log(Horns.allOpt);
+            loadHorns();
+        });
 }
 
-Horns.loadHorns = () => {
-    Horns.allHorns.forEach(horns => horns.render())
-}
-console.log(Horns.allHorns)
+function loadHorns() {
+    for(let i = 0; i < Horns.allHorns.length; i++){
+        Horns.allHorns[i].render(); 
+    }
+    
+};
 
-$(() => Horns.readJson());
+console.log(Horns.allHorns);
 
-Horns.fillOptArr = function () {
+
+function fillOptArr() {
     for (let i = 0; i < Horns.allHorns.length; i++) {
         Horns.allOpt.push(Horns.allHorns[i].keyword);
     }
     return Horns.allOpt;
 }
-Horns.fillOptArr();
-
-function checkKeyword(){    }
 
 
-function loadOpt (){
-    Horns.allOpt.forEach(horns => {
-        console.log(horns);
-        // $('#opt-template').append('<option class="clone"></option>');
-        // let optClone = $('option[class="clone"]');
-        // $('option').text(horns);
-        // optClone.attr('class', horns);
-        // optClone.removeClass('clone');
-    });
-}
+// function checkKeyword() { }
 
+readJson();
+fillOptArr();
 
 console.log(Horns.allOpt);
-loadOpt();
 
