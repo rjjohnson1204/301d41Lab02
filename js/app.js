@@ -11,7 +11,7 @@ function Horns(horns) {
 Horns.allHorns = [];
 Horns.allOpt = [];
 
-Horns.prototype.render = function() {
+Horns.prototype.render = function () {
     $('main').append('<div class="clone"></div>');
     let hornClone = $('div[class="clone"]');
     let hornHTML = $('#photo-template').html();
@@ -33,20 +33,21 @@ function readJson() {
             console.log('my data from page 1', data);
         })
         .then(() => {
-            for(let i = 0; i < Horns.allHorns.length; i++){
-                Horns.allHorns[i].render(); 
+            for (let i = 0; i < Horns.allHorns.length; i++) {
+                Horns.allHorns[i].render();
                 Horns.allOpt.push(Horns.allHorns[i].keyword)
             }
             console.log(Horns.allOpt);
             loadHorns();
+            renderOpt();
         });
 }
 
 function loadHorns() {
-    for(let i = 0; i < Horns.allHorns.length; i++){
-        Horns.allHorns[i].render(); 
+    for (let i = 0; i < Horns.allHorns.length; i++) {
+        Horns.allHorns[i].render();
     }
-    
+
 };
 
 console.log(Horns.allHorns);
@@ -58,8 +59,19 @@ function fillOptArr() {
     }
     return Horns.allOpt;
 }
+function renderOpt() {
+    for (let i = 0; i < Horns.allOpt.length; i++) {
+        $('#opt-template').append(`<option class="clone"></option>`);
+        let optClone = $('option[class="clone"]');
+        let optHTML = $('#photo-template').html();
+        optClone.html(optHTML);
+        optClone.removeClass('clone');
+        optClone.attr('class', Horns.allOpt[i]);
+        optClone.text(Horns.allOpt[i]);
 
-
+        console.log(Horns.allOpt[i]);
+    }
+}
 // function checkKeyword() { }
 
 readJson();
