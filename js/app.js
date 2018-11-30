@@ -10,6 +10,7 @@ function Horns(horns) {
 
 Horns.allHorns = [];
 Horns.allOpt = [];
+Horns.uniqueOpt = [];
 
 Horns.prototype.render = function () {
     $('main').append('<div class="clone"></div>');
@@ -25,22 +26,23 @@ Horns.prototype.render = function () {
 
 function readJson() {
     $.get('../data/page-1.json', 'json')
-        .then(data => {
-            data.forEach(obj => {
-                Horns.allHorns.push(new Horns(obj));
-            })
-
-            console.log('my data from page 1', data);
+    .then(data => {
+        data.forEach(obj => {
+            Horns.allHorns.push(new Horns(obj));
         })
-        .then(() => {
-            for (let i = 0; i < Horns.allHorns.length; i++) {
-                Horns.allHorns[i].render();
-                Horns.allOpt.push(Horns.allHorns[i].keyword)
-            }
-            console.log(Horns.allOpt);
-            loadHorns();
-            renderOpt();
-        });
+        
+        console.log('my data from page 1', data);
+    })
+    .then(() => {
+        for (let i = 0; i < Horns.allHorns.length; i++) {
+            Horns.allHorns[i].render();
+            Horns.allOpt.push(Horns.allHorns[i].keyword)
+        }
+        console.log(Horns.allOpt);
+        loadHorns();
+        makeAllOptUnique();
+        renderOpt();
+    });
 }
 
 function loadHorns() {
@@ -60,20 +62,23 @@ function fillOptArr() {
     return Horns.allOpt;
 }
 function renderOpt() {
-    for (let i = 0; i < Horns.allOpt.length; i++) {
+    for (let i = 0; i < Horns.uniqueOpt[0]["length"]; i++) {
         $('#opt-template').append(`<option class="clone"></option>`);
         let optClone = $('option[class="clone"]');
         let optHTML = $('#photo-template').html();
         optClone.html(optHTML);
         optClone.removeClass('clone');
-        optClone.attr('class', Horns.allOpt[i]);
-        optClone.text(Horns.allOpt[i]);
+        optClone.attr('class', Horns.uniqueOpt[0][i]);
+        optClone.text(Horns.uniqueOpt[0][i]);
 
-        console.log(Horns.allOpt[i]);
+        console.log(Horns.uniqueOpt[0][i]);
     }
 }
-// function checkKeyword() { }
-
+function makeAllOptUnique() {
+    var uniqueOptArr = [...new Set(Horns.allOpt)];
+    Horns.uniqueOpt.push(uniqueOptArr);
+    
+}
 readJson();
 fillOptArr();
 
