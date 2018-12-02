@@ -11,29 +11,32 @@ function Horns(horns) {
 Horns.allHorns = [];
 Horns.allOpt = [];
 Horns.uniqueOpt = [];
+var page = '../data/page-2.json';
 
-Horns.prototype.render = function() {
+Horns.prototype.render = function () {
     const $template = $('#photo-template').html();
     const $src = Handlebars.compile($template);
     return $src(this);
 }
-function readJson() {
-    $.get('../data/page-1.json', 'json')
-    .then(data => {
-        data.forEach(obj => {
-            Horns.allHorns.push(new Horns(obj));
+function readJson(page) {
+    $.get(page, 'json')
+        .then(data => {
+            data.forEach(obj => {
+                Horns.allHorns.push(new Horns(obj));
+            })
         })
-    })
-    .then(() => {
-        for (let i = 0; i < Horns.allHorns.length; i++) {
-            Horns.allHorns[i].render();
-            Horns.allOpt.push(Horns.allHorns[i].keyword)
-        }
-        loadHorns();
-        makeAllOptUnique();
-        renderOpt();
-    });
+        .then(() => {
+            for (let i = 0; i < Horns.allHorns.length; i++) {
+                Horns.allHorns[i].render();
+                Horns.allOpt.push(Horns.allHorns[i].keyword)
+            }
+            loadHorns();
+            makeAllOptUnique();
+            renderOpt();
+        });
 }
+
+$(() => readJson('data/page-1.json'));
 
 function loadHorns() {
     for (let i = 0; i < Horns.allHorns.length; i++) {
@@ -61,16 +64,54 @@ function renderOpt() {
 }
 function makeAllOptUnique() {
     var uniqueOptArr = [...new Set(Horns.allOpt)];
-    Horns.uniqueOpt.push(uniqueOptArr);   
+    Horns.uniqueOpt.push(uniqueOptArr);
 }
 
-$('#opt-template').on('change', function renderSelOpt() {
- let SelVal = $(this).val();
- $('div').hide();
- $('div[id = "'+SelVal+'"]').show();
+$('#pg1').click(function () {
+    page = '../data/page-1.json';
+    Horns.allHorns = [];
+    Horns.uniqueOpt = [];
+    $('div').remove();
+    $('option').remove();
+    $(() => readJson(page, 'json'));
+    $('#sortTitle').show();
+    $('#sortHorns').show();
 });
 
-readJson();
+$('#pg2').click(function () {
+    page = '../data/page-2.json';
+    Horns.allHorns = [];
+    Horns.uniqueOpt = [];
+    $('div').remove();
+    $('option').remove();
+    $(() => readJson(page, 'json'));
+    $('#sortTitle').show();
+    $('#sortHorns').show();
+});
+
+$('#opt-template').on('change', function renderSelOpt() {
+    let SelVal = $(this).val();
+    $('div').hide();
+    $('div[id = "' + SelVal + '"]').show();
+});
+
+$('#sortTitle').click(function () {
+    $('div').remove();
+    Horns.allHorns.sort(function (a, b) {
+        return a.title.localeCompare(b.title);
+    });
+    $(() => readJson(page, 'json'));
+    $('#sortTitle').hide();
+    $('#sortHorns').hide();
+});
+$('#sortHorns').click(function () {
+    $('div').remove();
+    Horns.allHorns.sort(function (a, b) { return b.horns - a.horns; });
+    $(() => readJson(page, 'json'));
+    $('#sortHorns').hide();
+    $('#sortTitle').hide();
+});
+
 fillOptArr();
 
 
